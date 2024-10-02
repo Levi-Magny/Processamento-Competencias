@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-from Utils.general import create_matrix, DISCIPLINES, salva_maior_indice
-from Processing.Processing import Profile
+from src.Utils.general import create_matrix, DISCIPLINES, salva_maior_indice
+from src.Processing.Processing import Profile
 
 class GrafoCompetencias:
     
@@ -63,9 +63,9 @@ class GrafoCompetencias:
             
             u = self.estrutura_notas[i-1].dot(pesos)
             self.estrutura_notas[i] = self.funcao_bloom(self.estrutura_notas[i], u, self.estrutura_info["acumulado"][i])
-            
+
         return self.calcula_indicador()
-        
+    
     def funcao_bloom(self, bias: np.ndarray, u: np.ndarray, bloom: int) -> float:
         new_array = np.ndarray(u.shape)
         for i in range(new_array.size):

@@ -1,10 +1,19 @@
+"""_summary_
+"""
+from typing import (Tuple, List, Dict)
+from difflib import SequenceMatcher
 import numpy as np
 import pandas as pd
-from difflib import SequenceMatcher
+
 
 MAIOR_INDICE = (3, 2)
 
-def create_matrix(index: tuple) -> tuple[np.ndarray, int]:
+def create_matrix(index: Tuple) -> Tuple[np.ndarray, int]:
+    """_summary_
+
+    :param index: _description_
+    :return: _description_
+    """
     A = np.zeros(shape=(4,6))
     B = np.zeros(shape=(index[0]+1,index[1]+1))
     for i in range(4):
@@ -14,39 +23,48 @@ def create_matrix(index: tuple) -> tuple[np.ndarray, int]:
     for i in range(index[0]+1):
         for j in range(index[1]+1):
             B[i][j] = int(A[:i+1, :j+1].sum())
-    
+
     return B, int(B[index[0]][index[1]])
 
-def salva_maior_indice(acumulado: int, posicao: tuple[int, int, int]) -> None:
-    with open('Data/maiores_blooms.csv', 'a') as f:
+
+def salva_maior_indice(acumulado: int, posicao: Tuple[int, int, int]) -> None:
+    """_summary_
+
+    :param acumulado: _description_
+    :param posicao: _description_
+    """
+    with open('Data/maiores_blooms.csv', 'a', encoding='utf-8') as f:
         linha = f"{posicao[2]},{acumulado},{posicao[0]},{posicao[1]}\n"
         f.write(linha)
+
 
 def norm_grade(grade: float) -> float:
     """_summary_
 
-    Args:
-        grade (float): _description_
-
-    Returns:
-        float: _description_
+    :param grade: _description_
+    :return: _description_
     """
     grade_array = np.random.uniform(6.0, 10.0, 30)
     grade_array = np.append(grade_array, grade)
     valor_nota = (grade - grade_array.min())/(grade_array.max() - grade_array.min())
     return valor_nota
-    
+
     # std = np.std(grade_array, ddof=1)
     # mean = np.mean(grade_array)
-    
+
     # z = (grade - mean)/std
     # z_min = (grade_array.min() - mean)/std
     # z_max = (grade_array.max() - mean)/std
-    
+
     # valor_nota = (z - z_min)/(z_max - z_min)
 
 
-def load_excel_as_dict(file_path):
+def load_excel_as_dict(file_path: str):
+    """_summary_
+
+    :param file_path: _description_
+    :return: _description_
+    """
     # Carregar todas as planilhas do arquivo Excel
     all_sheets_df = pd.read_excel(file_path, sheet_name=None)
 
@@ -55,7 +73,7 @@ def load_excel_as_dict(file_path):
     for sheet_name, df in list(all_sheets_df.items())[:-1]:
         # Transformar a planilha em um dicionário com a primeira coluna como chave
         sheet_dict = {}
-        for index, row in df.iterrows():
+        for _, row in df.iterrows():
             # Usar a primeira coluna como chave
             key = row.iloc[0]
             # Excluir a primeira coluna dos valores
@@ -66,10 +84,10 @@ def load_excel_as_dict(file_path):
     return sheets_dict
 
 
-def get_subject_by_semester(semester: int = None) -> dict:
+def get_subject_by_semester(semester: int = None) -> Dict:
     """
     # Recupera as matérias por semestre
-    
+
     Essa função separa as matérias de cada semestre indexadas pelos seus respectivos códigos
 
     ## Parameters:
@@ -88,37 +106,56 @@ def get_subject_by_semester(semester: int = None) -> dict:
 
 
 def same_name(a: str, b: str) -> bool:
+    """_summary_
+
+    :param a: _description_
+    :param b: _description_
+    :return: _description_
+    """
     return SequenceMatcher(None, a, b).ratio() > 0.88
 
-import numpy as np
 
-def similaridade_por_cosseno(lista1:list, lista2:list):
+def similaridade_por_cosseno(lista1:List, lista2:List):
+    """_summary_
+
+    :param lista1: _description_
+    :param lista2: _description_
+    :return: _description_
+    """
     # Calcular o produto escalar entre os dois vetores
     vetor2 = np.array(lista1)
     vetor1 = np.array(lista2)
     produto_escalar = np.dot(vetor1, vetor2)
-    
+
     # Calcular a norma (magnitude) de cada vetor
     norma_vetor1 = np.linalg.norm(vetor1)
     norma_vetor2 = np.linalg.norm(vetor2)
-    
+
     # Calcular a similaridade por cosseno
     similaridade = produto_escalar / (norma_vetor1 * norma_vetor2)
-    
+
     return similaridade
 
-def distancia_euclidiana(lista1, lista2):
+
+def distancia_euclidiana(lista1: List, lista2: List):
+    """_summary_
+
+    :param lista1: _description_
+    :param lista2: _description_
+    :return: _description_
+    """
     # Converter as listas em arrays do NumPy
     vetor1 = np.array(lista1)
     vetor2 = np.array(lista2)
-    
+
     # Calcular a diferença entre os vetores
     diferenca = vetor1 - vetor2
-    
+
     # Calcular a distância euclidiana
     distancia = np.sqrt(np.sum(diferenca ** 2))
-    
+
     return distancia
+
 
 DISCIPLINES = {
   "HARDWARE": np.array([
